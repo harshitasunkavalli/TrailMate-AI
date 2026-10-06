@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TrailMate AI 🌿</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+
+            background: linear-gradient(
+                135deg,
+                #dff5e3,
+                #f4f9e6
+            );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px;
+
+            color: #23412d;
+        }
+
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+
+            background: rgba(255, 255, 255, 0.94);
+
+            padding: 40px;
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 15px 40px rgba(40, 80, 50, 0.15);
+        }
+
+
+        .logo {
+            font-size: 42px;
+            text-align: center;
+        }
+
+
+        h1 {
+            text-align: center;
+
+            margin-top: 8px;
+
+            font-size: 34px;
+        }
+
+
+        .tagline {
+            text-align: center;
+
+            margin: 8px 0 30px;
+
+            color: #66806d;
+
+            font-size: 17px;
+        }
+
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+
+        .section h3 {
+            margin-bottom: 12px;
+        }
+
+
+        .options {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+        }
+
+
+        button.option {
+            border: 2px solid #cce4d0;
+
+            background: #f7fcf7;
+
+            padding: 12px 18px;
+
+            border-radius: 30px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            color: #31583d;
+
+            transition: 0.2s;
+        }
+
+
+        button.option:hover {
+            background: #e4f4e7;
+
+            transform: translateY(-2px);
+        }
+
+
+        button.option.selected {
+            background: #4caf68;
+
+            color: white;
+
+            border-color: #4caf68;
+        }
+
+
+        #generateBtn {
+            width: 100%;
+
+            border: none;
+
+            padding: 16px;
+
+            border-radius: 14px;
+
+            background: #31834a;
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+
+            transition: 0.2s;
+        }
+
+
+        #generateBtn:hover {
+            background: #276c3c;
+
+            transform: translateY(-1px);
+        }
+
+
+        #generateBtn:disabled {
+            background: #8eb69a;
+
+            cursor: not-allowed;
+        }
+
+
+        #result {
+            display: none;
+
+            margin-top: 30px;
+
+            padding: 25px;
+
+            background: #eef8ef;
+
+            border-radius: 18px;
+
+            line-height: 1.7;
+
+            white-space: pre-wrap;
+        }
+
+
+        .loading {
+            text-align: center;
+
+            color: #66806d;
+        }
+
+
+        /* =========================
+           TOUCH GRASS SCORE
+        ========================= */
+
+        #scoreCard {
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 25px;
+
+            background: #e8f6e9;
+
+            border-radius: 18px;
+
+            text-align: center;
+
+            border: 1px solid #cce8d0;
+        }
+
+
+        .score-icon {
+            font-size: 38px;
+
+            margin-bottom: 5px;
+        }
+
+
+        #scoreCard h2 {
+            margin: 8px 0;
+
+            color: #23412d;
+        }
+
+
+        .score {
+            font-size: 56px;
+
+            font-weight: bold;
+
+            color: #31834a;
+
+            margin: 10px 0;
+        }
+
+
+        #scoreMessage {
+            margin-bottom: 18px;
+
+            color: #55715d;
+
+            line-height: 1.5;
+        }
+
+
+        #completeBtn {
+            border: none;
+
+            padding: 13px 22px;
+
+            border-radius: 25px;
+
+            background: #31834a;
+
+            color: white;
+
+            font-size: 15px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        #completeBtn:hover {
+            background: #276c3c;
+
+            transform: translateY(-1px);
+        }
+
+
+        #completeBtn:disabled {
+            background: #8eb69a;
+
+            cursor: not-allowed;
+        }
+        .progress-section {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #cce4d0;
+    text-align: center;
+}
+
+.streak {
+    font-size: 18px;
+    font-weight: bold;
+    color: #d87920;
+    margin-bottom: 10px;
+}
+
+.challenge-count {
+    font-size: 15px;
+    color: #55715d;
+    margin-bottom: 8px;
+}
+
+.next-goal {
+    font-size: 15px;
+    color: #55715d;
+}
+
+.next-goal strong,
+.challenge-count strong {
+    color: #31834a;
+}
+
+
+        .score-total {
+            margin-top: 12px;
+
+            font-size: 14px;
+
+            color: #66806d;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- LOGO -->
+
+    <div class="logo">
+        🌿
+    </div>
+
+
+    <h1>
+        TrailMate AI
+    </h1>
+
+
+    <p class="tagline">
+        Less screen. More world.
+    </p>
+
+
+
+    <!-- DURATION -->
+
+    <div class="section">
+
+        <h3>
+            ⏱️ How much time do you have?
+        </h3>
+
+
+        <div class="options">
+
+            <button
+                class="option duration"
+                data-value="15">
+                15 min
+            </button>
+
+
+            <button
+                class="option duration selected"
+                data-value="30">
+                30 min
+            </button>
+
+
+            <button
+                class="option duration"
+                data-value="60">
+                60 min
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MOOD -->
+
+    <div class="section">
+
+        <h3>
+            😊 What's your mood?
+        </h3>
+
+
+        <div class="options">
+
+            <button
+                class="option mood selected"
+                data-value="relaxed">
+                Relaxed
+            </button>
+
+
+            <button
+                class="option mood"
+                data-value="energetic">
+                Energetic
+            </button>
+
+
+            <button
+                class="option mood"
+                data-value="curious">
+                Curious
+            </button>
+
+
+            <button
+                class="option mood"
+                data-value="stressed">
+                Stressed
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ACTIVITY -->
+
+    <div class="section">
+
+        <h3>
+            🌳 What do you want to explore?
+        </h3>
+
+
+        <div class="options">
+
+            <button
+                class="option activity selected"
+                data-value="nature">
+                Nature
+            </button>
+
+
+            <button
+                class="option activity"
+                data-value="walking">
+                Walking
+            </button>
+
+
+            <button
+                class="option activity"
+                data-value="mindfulness">
+                Mindfulness
+            </button>
+
+
+            <button
+                class="option activity"
+                data-value="adventure">
+                Adventure
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- GENERATE BUTTON -->
+
+    <button id="generateBtn">
+
+        🌿 Create My Challenge
+
+    </button>
+
+
+
+    <!-- AI RESULT -->
+
+    <div id="result"></div>
+
+
+
+    <!-- TOUCH GRASS SCORE -->
+
+    <div id="scoreCard">
+
+        <div class="score-icon">
+            🌱
+        </div>
+
+
+        <h2>
+            Touch Grass Score
+        </h2>
+
+
+        <div
+            class="score"
+            id="score">
+            0
+        </div>
+
+
+        <p id="scoreMessage">
+            Complete your outdoor challenge to earn points!
+        </p>
+
+
+        <button id="completeBtn">
+
+            ✅ I Completed My Challenge
+
+        </button>
+
+
+        <div class="score-total">
+
+            Your score is saved on this device 🌿
+
+        </div>
+        <div class="progress-section">
+
+    <div class="streak">
+        🔥 <span id="streak">1</span> Day Streak
+    </div>
+
+    <div class="challenge-count">
+        🌿 Challenges completed:
+        <strong id="challengeCount">0</strong>
+    </div>
+
+    <div class="next-goal">
+        🎯 Next goal:
+        <strong id="nextGoal">100</strong> points
+    </div>
+
+</div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    /* =========================
+       USER SELECTIONS
+    ========================= */
+
+    let duration = 30;
+
+    let mood = "relaxed";
+
+    let activity_type = "nature";
+
+
+    let challengeGenerated = false;
+
+    let challengeCompleted = false;
+
+
+
+    /* =========================
+       OPTION BUTTONS
+    ========================= */
+
+    function setupButtons(className, callback) {
+
+        const buttons =
+            document.querySelectorAll("." + className);
+
+
+        buttons.forEach(button => {
+
+            button.addEventListener("click", () => {
+
+
+                buttons.forEach(btn => {
+
+                    btn.classList.remove("selected");
+
+                });
+
+
+                button.classList.add("selected");
+
+
+                callback(button.dataset.value);
+
+            });
+
+        });
+
+    }
+
+
+
+    setupButtons("duration", value => {
+
+        duration = Number(value);
+
+    });
+
+
+
+    setupButtons("mood", value => {
+
+        mood = value;
+
+    });
+
+
+
+    setupButtons("activity", value => {
+
+        activity_type = value;
+
+    });
+
+
+
+    /* =========================
+       GENERATE CHALLENGE
+    ========================= */
+
+    document
+        .getElementById("generateBtn")
+        .addEventListener("click", async () => {
+
+
+            const result =
+                document.getElementById("result");
+
+
+            const button =
+                document.getElementById("generateBtn");
+
+
+            const scoreCard =
+                document.getElementById("scoreCard");
+
+
+            const completeBtn =
+                document.getElementById("completeBtn");
+
+
+            challengeGenerated = false;
+
+            challengeCompleted = false;
+
+
+            result.style.display = "block";
+
+
+            result.innerHTML = `
+                <div class="loading">
+                    🌿 Creating your outdoor challenge...
+                </div>
+            `;
+
+
+            scoreCard.style.display = "none";
+
+
+            completeBtn.disabled = false;
+
+            completeBtn.innerHTML =
+                "✅ I Completed My Challenge";
+
+
+            button.disabled = true;
+
+
+            try {
+
+
+                const response =
+                    await fetch(
+                        "http://127.0.0.1:8000/challenge",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                duration:
+                                    duration,
+
+                                mood:
+                                    mood,
+
+                                activity_type:
+                                    activity_type
+
+                            })
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Server returned an error"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                result.innerHTML = `
+                    <h2>🌿 Your TrailMate Challenge</h2>
+                    <br>
+                    ${data.challenge}
+                `;
+
+
+                challengeGenerated = true;
+
+
+                /*
+                    Show score card
+                    only after challenge generation
+                */
+
+                scoreCard.style.display = "block";
+
+
+            }
+
+
+            catch (error) {
+
+
+                console.error(error);
+
+
+                result.innerHTML = `
+                    ❌ Something went wrong.
+
+                    <br><br>
+
+                    Make sure the TrailMate backend
+                    is running.
+                `;
+
+
+                scoreCard.style.display = "none";
+
+            }
+
+
+            button.disabled = false;
+
+        });
+
+
+
+    /* =========================
+       TOUCH GRASS SCORE
+    ========================= */
+
+    document
+        .getElementById("completeBtn")
+        .addEventListener("click", () => {
+
+
+            if (!challengeGenerated) {
+
+                return;
+
+            }
+
+
+            if (challengeCompleted) {
+
+                return;
+
+            }
+
+
+            /*
+                Score based on duration:
+
+                15 min = 15 points
+                30 min = 30 points
+                60 min = 60 points
+            */
+
+            let points = duration;
+
+
+            /*
+                Get previous score
+                from browser storage
+            */
+
+            let totalScore =
+                Number(
+                    localStorage.getItem(
+                        "trailMateScore"
+                    )
+                ) || 0;
+
+
+            totalScore += points;
+
+
+            localStorage.setItem(
+                "trailMateScore",
+                totalScore
+            );
+
+
+            /*
+                Update UI
+            */
+
+            document
+                .getElementById("score")
+                .textContent =
+                "+" + points;
+
+
+            document
+                .getElementById("scoreMessage")
+                .textContent =
+                `Amazing! You spent ${duration} minutes outdoors. 🌿`;
+
+
+            document
+                .getElementById("completeBtn")
+                .textContent =
+                "🌱 Challenge Completed!";
+
+
+            document
+                .getElementById("completeBtn")
+                .disabled = true;
+
+
+            challengeCompleted = true;
+
+
+        });
+
+// =========================
+// TOUCH GRASS SCORE
+// =========================
+
+document.getElementById("completeBtn").addEventListener("click", () => {
+
+    const scoreElement = document.getElementById("score");
+    const messageElement = document.getElementById("scoreMessage");
+    const completeButton = document.getElementById("completeBtn");
+
+    const points = duration;
+
+    let totalScore = Number(
+        localStorage.getItem("trailMateScore")
+    ) || 0;
+
+    totalScore += points;
+
+    localStorage.setItem(
+        "trailMateScore",
+        totalScore
+    );
+
+    scoreElement.textContent = "+" + points;
+
+    messageElement.textContent =
+        `Amazing! You spent ${duration} minutes outdoors. 🌿`;
+
+    completeButton.textContent =
+        "🌱 Challenge Completed!";
+
+    completeButton.disabled = true;
+
+});
+</script>
+
+
+</body>
+
+</html>
